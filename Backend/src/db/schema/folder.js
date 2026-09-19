@@ -1,4 +1,5 @@
 import { pgTable, serial, varchar, integer, timestamp } from "drizzle-orm/pg-core";
+
 import { users } from "./user.js";
 
 export const folders = pgTable("folders", {

@@ -1,14 +1,14 @@
 import express from "express";
-import pool from "./config/db.js";
+
+import folderRoutes from "./routes/folderRoutes.js";
+import noteRoutes from "./routes/noteRoutes.js";
+
 const app = express();
 
-pool.query("SELECT NOW()")
-  .then((result) => {
-    console.log("Database connected:", result.rows[0]);
-  })
-  .catch((error) => {
-    console.error("Error connecting to database:", error);
-  });
+app.use(express.json());
+
+app.use("/api/folders", folderRoutes);
+app.use("/api/notes", noteRoutes);
 
 app.listen(5000, () => {
   console.log("Server is running on port 5000");

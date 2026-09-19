@@ -1,14 +1,28 @@
 import { db } from "../config/db.js";
-import { folders } from "../models/folder.js";
+import { folders } from "../db/schema/folder.js";
+import { users } from "../db/schema/user.js";
 import { eq } from "drizzle-orm";
 
 export const createFolder = async (req, res) => {
   try {
     const { name, user_id } = req.body;
 
-    if (!name || !user_id) {
+    const parsedUserId = Number(user_id);
+
+    if (!name || !Number.isInteger(parsedUserId) || parsedUserId < 1) {
       return res.status(400).json({
-        message: "Name and user_id are required",
+        message: "A valid name and user_id are required",
+      });
+    }
+
+    const [user] = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, parsedUserId));
+
+    if (!user) {
+      return res.status(404).json({
+        message: `User ${parsedUserId} does not exist`,
       });
     }
 
@@ -16,7 +30,7 @@ export const createFolder = async (req, res) => {
       .insert(folders)
       .values({
         name,
-        user_id,
+        user_id: parsedUserId,
       })
       .returning();
 

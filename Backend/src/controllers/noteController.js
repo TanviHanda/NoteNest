@@ -1,5 +1,5 @@
 import { db } from "../config/db.js";
-import { notes } from "../db/schema/notes.js";
+import { notes } from "../db/schema/note.js";
 import { eq } from "drizzle-orm";
 
 export const createNote = async (req, res) => {
